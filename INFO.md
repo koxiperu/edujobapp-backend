@@ -119,10 +119,9 @@ Represents a job or study application submitted by a user.
 - submit_date	(Date of submission)
 - submit_deadline	(Application deadline)
 - response_deadline	(Expected response date)
-- app_status	(NotNull, PLANNED / SUBMITTED / ACCEPTED / REJECTED / etc.)
+- app_status	(NotNull, ENUM: DRAFT / SUBMITTED / UNDER_REVIEW / ACCEPTED / REJECTED)
 - description	(Detailed description of the job offer or course program)
-- response_status	(NotNull, by default WAITING. Final outcome of the application from the company: WAITING/ACCEPTED/REJECTED).
-- result_notes	(Optional notes about the result or feedback)
+- response_notes	(Optional notes about the result or feedback)
 
 #### Join table (Many-to-Many): Application-Document (app-doc)
 Implements Many-to-Many between applications and documents.
