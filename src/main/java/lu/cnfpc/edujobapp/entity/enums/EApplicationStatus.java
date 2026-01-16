@@ -1,11 +1,9 @@
 package lu.cnfpc.edujobapp.entity.enums;
 
 public enum EApplicationStatus {
-    PLANNED,
+    DRAFT,
     SUBMITTED,
-    IN_PROGRESS,
-    WAITING_FOR_RESPONSE,
+    UNDER_REVIEW,
     ACCEPTED,
-    REJECTED,
-    WITHDRAWN
+    REJECTED
 }

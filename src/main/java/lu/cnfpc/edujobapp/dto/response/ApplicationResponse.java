@@ -15,7 +15,6 @@ public class ApplicationResponse {
     private LocalDate submitDeadline;
     private LocalDate responseDeadline;
     private String appStatus; // Will map to EApplicationStatus enum name
-    private String responseStatus; // Will map to EResponseStatus enum name
     private String resultNotes;// Nested DTO
     private CompanyResponse company; // Nested DTO
     private Set<DocumentResponse> documents; // Nested DTO
@@ -91,14 +90,6 @@ public class ApplicationResponse {
 
     public void setAppStatus(String appStatus) {
         this.appStatus = appStatus;
-    }
-
-    public String getResponseStatus() {
-        return responseStatus;
-    }
-
-    public void setResponseStatus(String responseStatus) {
-        this.responseStatus = responseStatus;
     }
 
     public String getResultNotes() {

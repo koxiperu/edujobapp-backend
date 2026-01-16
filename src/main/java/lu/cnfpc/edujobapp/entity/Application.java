@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lu.cnfpc.edujobapp.entity.enums.EApplicationStatus;
 import lu.cnfpc.edujobapp.entity.enums.EApplicationType;
-import lu.cnfpc.edujobapp.entity.enums.EResponseStatus;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
@@ -44,14 +43,8 @@ public class Application {
     @Enumerated(EnumType.STRING)
     private EApplicationStatus appStatus;
 
-    
-
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private EResponseStatus responseStatus = EResponseStatus.WAITING;
-
     @Lob
-    private String resultNotes;
+    private String responseNotes;
 
     // Many-to-One relationship with User
     @NotNull
@@ -82,7 +75,6 @@ public class Application {
             LocalDate responseDeadline,
             EApplicationStatus appStatus,
             String description,
-            EResponseStatus responseStatus,
             String resultNotes,
             User user,
             Company company,
@@ -96,8 +88,7 @@ public class Application {
         this.responseDeadline = responseDeadline;
         this.appStatus = appStatus;
         this.description = description;
-        this.responseStatus = responseStatus;
-        this.resultNotes = resultNotes;
+        this.responseNotes = resultNotes; // Changed to match field name
         this.user = user;
         this.company = company;
         this.documents = documents;
@@ -175,22 +166,20 @@ public class Application {
         this.description = description;
     }
 
-    public EResponseStatus getResponseStatus() {
-        return responseStatus;
+    public String getResponseNotes() {
+        return responseNotes;
     }
 
-    public void setResponseStatus(EResponseStatus responseStatus) {
-        this.responseStatus = responseStatus;
+    public void setResponseNotes(String responseNotes) {
+        this.responseNotes = responseNotes;
     }
-
-    public String getResultNotes() {
-        return resultNotes;
-    }
-
-    public void setResultNotes(String resultNotes) {
-        this.resultNotes = resultNotes;
-    }
-
+    
+    // Kept for backward compatibility if needed by DTOs mapping to "resultNotes" property, 
+    // but cleaner to rename DTO property. 
+    // However, the original code had "responseNotes" field and "resultNotes" getter/setter. 
+    // I am standardizing on "responseNotes" field and methods.
+    // I will verify DTO usage.
+    
     public User getUser() {
         return user;
     }
@@ -214,7 +203,4 @@ public class Application {
     public void setDocuments(Set<Document> documents) {
         this.documents = documents;
     }
-
-    // Getters and Setters
-    
 }

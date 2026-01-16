@@ -22,9 +22,6 @@ public class ApplicationRequest {
     @NotNull(message = "Application status is required")
     private String appStatus; // Will map to EApplicationStatus enum name
 
-    @NotNull(message = "Response status is required")
-    private String responseStatus; // Will map to EResponseStatus enum name
-
     private String resultNotes;
 
     @NotNull(message = "User ID is required")
@@ -90,14 +87,6 @@ public class ApplicationRequest {
 
     public void setAppStatus(String appStatus) {
         this.appStatus = appStatus;
-    }
-
-    public String getResponseStatus() {
-        return responseStatus;
-    }
-
-    public void setResponseStatus(String responseStatus) {
-        this.responseStatus = responseStatus;
     }
 
     public String getResultNotes() {

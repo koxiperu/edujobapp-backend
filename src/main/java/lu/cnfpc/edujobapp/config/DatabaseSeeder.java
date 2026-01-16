@@ -9,7 +9,6 @@ import lu.cnfpc.edujobapp.entity.enums.EApplicationStatus;
 import lu.cnfpc.edujobapp.entity.enums.EApplicationType;
 import lu.cnfpc.edujobapp.entity.enums.ECompanyType;
 import lu.cnfpc.edujobapp.entity.enums.EDocumentStatus;
-import lu.cnfpc.edujobapp.entity.enums.EResponseStatus;
 import lu.cnfpc.edujobapp.repository.ApplicationRepository;
 import lu.cnfpc.edujobapp.repository.CompanyRepository;
 import lu.cnfpc.edujobapp.repository.DocumentRepository;
@@ -116,14 +115,23 @@ public class DatabaseSeeder implements CommandLineRunner {
             );
 
             if (test != null) {
-                companyNames.forEach(name -> {
+                for (int i = 0; i < companyNames.size(); i++) {
+                    String name = companyNames.get(i);
                     Company company = new Company();
                     company.setName(name);
                     company.setType(ECompanyType.EMPLOYER);
                     company.setCountry("Luxembourg");
                     company.setUser(test);
+                    
+                    // Generate dummy data
+                    String safeName = name.split(" ")[0].toLowerCase().replaceAll("[^a-z]", "");
+                    company.setAddress("Rue " + safeName + " " + (i + 1) + ", L-" + (1000 + i * 100) + " Luxembourg");
+                    company.setEmail("contact@" + safeName + ".lu");
+                    company.setPhone("+352 20 " + (100 + i) + " " + (100 + i));
+                    company.setWebsite("https://www." + safeName + ".lu");
+                    
                     companyRepository.save(company);
-                });
+                }
             }
         }
     }
@@ -179,7 +187,6 @@ public class DatabaseSeeder implements CommandLineRunner {
                 app1.setSubmitDeadline(LocalDate.now().plusDays(20));
                 app1.setResponseDeadline(LocalDate.now().plusDays(30));
                 app1.setAppStatus(EApplicationStatus.SUBMITTED);
-                app1.setResponseStatus(EResponseStatus.WAITING);
                 app1.setUser(test);
                 app1.setCompany(companies.get(0)); // CFL
                 app1.setDocuments(new HashSet<>(Arrays.asList(documents.get(0), documents.get(1)))); // CV and Motivation letter
@@ -194,20 +201,18 @@ public class DatabaseSeeder implements CommandLineRunner {
                 app2.setSubmitDeadline(LocalDate.now().minusMonths(1));
                 app2.setResponseDeadline(LocalDate.now().minusWeeks(1));
                 app2.setAppStatus(EApplicationStatus.ACCEPTED);
-                app2.setResponseStatus(EResponseStatus.ACCEPTED);
                 app2.setUser(test);
                 app2.setCompany(companies.get(1)); // Dussmann (just for example, ideally a university)
                 app2.setDocuments(new HashSet<>(Collections.singletonList(documents.get(2)))); // Developer_Description.pdf
                 applicationRepository.save(app2);
 
-                // Application 3 for test: Job at POST, planned
+                // Application 3 for test: Job at POST, planned -> DRAFT
                 Application app3 = new Application();
                 app3.setTitle("Data Analyst Position");
                 app3.setDescription("Seeking a data analyst role at POST Luxembourg.");
                 app3.setApplicationType(EApplicationType.JOB);
                 app3.setSubmitDeadline(LocalDate.now().plusWeeks(2));
-                app3.setAppStatus(EApplicationStatus.PLANNED);
-                app3.setResponseStatus(EResponseStatus.WAITING);
+                app3.setAppStatus(EApplicationStatus.DRAFT);
                 app3.setUser(test);
                 app3.setCompany(companies.get(2)); // POST Luxembourg
                 app3.setDocuments(new HashSet<>(Collections.singletonList(documents.get(3)))); // Interview.txt (as a placeholder)
@@ -222,12 +227,61 @@ public class DatabaseSeeder implements CommandLineRunner {
                 app4.setSubmitDeadline(LocalDate.now().plusDays(5));
                 app4.setResponseDeadline(LocalDate.now().plusDays(15));
                 app4.setAppStatus(EApplicationStatus.REJECTED);
-                app4.setResponseStatus(EResponseStatus.REJECTED);
-                app4.setResultNotes("Overqualified for the course.");
+                app4.setResponseNotes("Overqualified for the course.");
                 app4.setUser(test);
                 app4.setCompany(companies.get(3)); // Amazon (just for example)
                 app4.setDocuments(new HashSet<>(Arrays.asList(documents.get(4), documents.get(5)))); // Motivation letter, CV
                 applicationRepository.save(app4);
+                
+                // Application 5: Job at Cactus, Interview -> UNDER_REVIEW
+                Application app5 = new Application();
+                app5.setTitle("Store Manager");
+                app5.setDescription("Management position at Cactus.");
+                app5.setApplicationType(EApplicationType.JOB);
+                app5.setSubmitDate(LocalDate.now().minusDays(5));
+                app5.setSubmitDeadline(LocalDate.now().plusDays(25));
+                app5.setResponseDeadline(LocalDate.now().plusDays(35));
+                app5.setAppStatus(EApplicationStatus.UNDER_REVIEW);
+                app5.setUser(test);
+                app5.setCompany(companies.get(4)); // Cactus
+                app5.setDocuments(new HashSet<>(Collections.singletonList(documents.get(0))));
+                applicationRepository.save(app5);
+                
+                // Application 6: Job at BNP Paribas, Offer Received -> ACCEPTED (or UNDER_REVIEW)
+                Application app6 = new Application();
+                app6.setTitle("Financial Advisor");
+                app6.setDescription("Advising clients on financial investments.");
+                app6.setApplicationType(EApplicationType.JOB);
+                app6.setSubmitDate(LocalDate.now().minusMonths(3));
+                app6.setAppStatus(EApplicationStatus.ACCEPTED); 
+                app6.setUser(test);
+                app6.setCompany(companies.get(5)); // BNP
+                app6.setDocuments(new HashSet<>(Arrays.asList(documents.get(1), documents.get(5))));
+                applicationRepository.save(app6);
+                
+                // Application 7: Course at PwC, Waiting -> UNDER_REVIEW
+                Application app7 = new Application();
+                app7.setTitle("Taxation Law Workshop");
+                app7.setDescription("Workshop on Luxembourg taxation laws.");
+                app7.setApplicationType(EApplicationType.COURSE);
+                app7.setSubmitDate(LocalDate.now().minusDays(2));
+                app7.setAppStatus(EApplicationStatus.UNDER_REVIEW);
+                app7.setUser(test);
+                app7.setCompany(companies.get(6)); // PwC
+                app7.setDocuments(new HashSet<>(Collections.singletonList(documents.get(4))));
+                applicationRepository.save(app7);
+                
+                // Application 8: Job at ArcelorMittal, Planned -> DRAFT
+                Application app8 = new Application();
+                app8.setTitle("Metallurgist");
+                app8.setDescription("Research position in metallurgy.");
+                app8.setApplicationType(EApplicationType.JOB);
+                app8.setSubmitDeadline(LocalDate.now().plusMonths(1));
+                app8.setAppStatus(EApplicationStatus.DRAFT);
+                app8.setUser(test);
+                app8.setCompany(companies.get(7)); // ArcelorMittal
+                app8.setDocuments(new HashSet<>(Collections.singletonList(documents.get(0))));
+                applicationRepository.save(app8);
             }
         }
     }
