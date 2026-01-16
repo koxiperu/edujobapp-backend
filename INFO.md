@@ -70,6 +70,7 @@ Build full-stack application EduJob Application Tracker.
 Defines user permissions for authorization. ADMIN and APPLICANT for now, SUPERVISOR for the future.
 - id (PK)	(Unique role ID)
 - name	(Role name (ENUM: ADMIN, USER))
+ADMIN can only manage all users (create, update, delete, view user's info) and companies (only view all companies without used_id who created it and only update existing company info). He cannot have access to other db information (documents, apps, create/delete companies of the user)
 
 #### User Entity (users)
 Represents any system user. 
@@ -180,7 +181,56 @@ and folder structure:
 ```
 ## 2.2. Configure application.properties (for Oracle or Postgres)
 ## 2.3. Create Entities
-## 2.4. 
+## 2.4. Create seeds for DB initialization
+
+#### roles table
+1. USER
+2. ADMIN
+#### users table
+1. Admin user:
+- username: admin
+- password: admin
+- email: admin@ab.com
+- first_name: admin_name
+- last_name: admin_surname
+- birthdate: 1.1.2000
+- role: admin 
+2. Test user1:
+- username: test1
+- password: test1
+- email: user1@ab.com
+- first_name: user1_name
+- last_name: user1_surname
+- birthdate: 2.1.2000
+- phone: 123456789
+- role: user
+3. Test user2:
+- username: test2
+- password: test2
+- email: user2@ab.com
+- first_name: user2_name
+- last_name: user2_surname
+- birthdate: 2.1.2000
+- phone: 123456789
+- role: user
+#### companies table:
+Default companies for existing users (test1 and test2):
+- "CFL - Société Nationale des Chemins de Fer Luxembourgeois",
+- "Dussmann Luxembourg",
+- "POST Luxembourg",
+- "Amazon",
+- "Cactus",
+- "BNP PARIBAS Luxembourg",
+- "PwC Luxembourg",
+- "ArcelorMittal",
+- "Goodyear",
+- "Cargolux Airlines International SA"
+All in country Luxembourg. Other data define randomly.
+#### documents table
+1. Take documents from /config/seed_documents, apply to test1 and test2 users.
+#### applications table
+Create different applications for test1 and test2 users, and with different documents attached and statuses.
+
 
 # 3. Installation and running the app
 # 3.1. Java & Maven installations
