@@ -9,6 +9,7 @@ import lu.cnfpc.edujobapp.entity.enums.EApplicationStatus;
 import lu.cnfpc.edujobapp.entity.enums.EApplicationType;
 import lu.cnfpc.edujobapp.entity.enums.ECompanyType;
 import lu.cnfpc.edujobapp.entity.enums.EDocumentStatus;
+import lu.cnfpc.edujobapp.entity.enums.ERole;
 import lu.cnfpc.edujobapp.repository.ApplicationRepository;
 import lu.cnfpc.edujobapp.repository.CompanyRepository;
 import lu.cnfpc.edujobapp.repository.DocumentRepository;
@@ -59,16 +60,16 @@ public class DatabaseSeeder implements CommandLineRunner {
 
     private void seedRoles() {
         if (roleRepository.count() == 0) {
-            roleRepository.save(new Role("USER"));
-            roleRepository.save(new Role("ADMIN"));
+            roleRepository.save(new Role(ERole.USER.name()));
+            roleRepository.save(new Role(ERole.ADMIN.name()));
         }
     }
 
     private void seedUsers() {
         if (userRepository.count() == 0) {
-            Role adminRole = roleRepository.findByName("ADMIN")
+            Role adminRole = roleRepository.findByName(ERole.ADMIN.name())
                     .orElseThrow(() -> new RuntimeException("Error: Admin Role is not found."));
-            Role userRole = roleRepository.findByName("USER")
+            Role userRole = roleRepository.findByName(ERole.USER.name())
                     .orElseThrow(() -> new RuntimeException("Error: User Role is not found."));
 
             User admin = new User(

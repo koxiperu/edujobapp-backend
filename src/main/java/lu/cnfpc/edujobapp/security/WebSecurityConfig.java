@@ -46,6 +46,7 @@ public class WebSecurityConfig {
                 .requestMatchers("/api-docs/**", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/public/**").permitAll()
+                .requestMatchers("/error").permitAll()
                 
                 // USER (Applicant) specific endpoints
                 .requestMatchers("/api/users/me").hasRole("USER")

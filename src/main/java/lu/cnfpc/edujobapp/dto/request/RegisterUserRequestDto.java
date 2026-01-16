@@ -31,13 +31,10 @@ public class RegisterUserRequestDto {
     @Size(max = 20, message = "Phone must be less than 20 characters")
     private String phone;
 
-    @NotNull(message = "Role is required")
-    private String role;
-
     //constructors
     public RegisterUserRequestDto() {
     }
-    public RegisterUserRequestDto(String username, String password, String email, String firstName, String lastName, LocalDate birthDate, String phone, String role) {
+    public RegisterUserRequestDto(String username, String password, String email, String firstName, String lastName, LocalDate birthDate, String phone) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -45,7 +42,6 @@ public class RegisterUserRequestDto {
         this.lastName = lastName;
         this.birthDate = birthDate;
         this.phone = phone;
-        this.role = role;
     }   
 
     // Getters and Setters
@@ -103,13 +99,5 @@ public class RegisterUserRequestDto {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 }
