@@ -69,7 +69,7 @@ Build full-stack application EduJob Application Tracker.
 #### Role Entity (roles)
 Defines user permissions for authorization. ADMIN and APPLICANT for now, SUPERVISOR for the future.
 - id (PK)	(Unique role ID)
-- name	(Role name (ENUM: ADMIN, USER))
+- name	(Role name (String: ADMIN, USER))
 ADMIN can only manage all users (create, update, delete, view user's info) and companies (only view all companies without used_id who created it and only update existing company info). He cannot have access to other db information (documents, apps, create/delete companies of the user)
 
 #### User Entity (users)
@@ -98,13 +98,13 @@ Represents a university, lycée, course provider, or employer.
 - user_id (NotNull, FK → users,	Owner of the company)
 
 #### Document Entity (documents)
-Represents uploaded files (PDFs, images, Excel, etc.) stored as BYTEA inside DB (max 5MB each file and not more than 1000, otherwise performance issues). But for production external storage is better.
+Represents uploaded files (PDFs, images, Excel, etc.) stored as binary content inside DB (max 5MB each file and not more than 1000, otherwise performance issues). But for production external storage is better.
 One document may be reused across multiple applications.
 - id (PK)	(NotNull, Unique, referenced by applications)
 - file_name	(NotNull, File name that user want to be displayed)
 - content_type	(pdf, picture, document, excel, etc. or brief description)
 - upload_date	(File upload timestamp, defined at the moment of saving in db as current timestamp)
-- data	(BYTEA content)
+- data	(Binary content - byte array)
 - doc_status	(NotNull, ENUM: READY / IN PROGRESS / NEED TO UPDATE)
 - user_id (NotNull, FK → users,	Owner of the documents)
 
@@ -205,7 +205,7 @@ Create Repositories classes.
 - phone: 123456789
 - role: user
 #### companies table:
-Default companies for existing users (test1 and test2):
+Default companies for existing user (test):
 - "CFL - Société Nationale des Chemins de Fer Luxembourgeois",
 - "Dussmann Luxembourg",
 - "POST Luxembourg",
@@ -218,9 +218,9 @@ Default companies for existing users (test1 and test2):
 - "Cargolux Airlines International SA"
 All in country Luxembourg. Other data define randomly.
 #### documents table
-1. Take documents from /config/seed_documents, apply to test1 and test2 users.
+1. Take documents from /config/seed_documents, apply to the test user.
 #### applications table
-Create different applications for test1 and test2 users, and with different documents attached and statuses.
+Create different applications for the test user, and with different documents attached and statuses.
 
 
 # 3. Installation and running the app
@@ -317,5 +317,3 @@ To run the application, you need to have a PostgreSQL database server installed 
    password=password
    ```
    Adjust these values if your PostgreSQL setup uses different credentials.
-
-
