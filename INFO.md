@@ -17,6 +17,10 @@ Build full-stack application EduJob Application Tracker.
    * /register: POST - Register a new user. 
    * /login: POST - Authenticate and receive a token (JWT).
 
+**/api/public - for unauthenticated users**
+   * /jobs
+        GET - Get job advertisements from an external third-party API.
+
 **/api/users**
    * /me
         GET - Get the current user's profile.
@@ -231,6 +235,21 @@ Implement the 3-layer architecture:
 
 ## 2.7. Add JWT and security
 Configure `WebSecurityConfig` to secure endpoints. Implement `JwtService` to generate and validate tokens. Create `JwtAuthenticationFilter` to intercept requests and set the `UserPrincipal` in the security context. Enable CORS and Swagger UI access.
+
+## 2.8. Integrate Third-Party Job API
+Enhance the landing page for unauthenticated users by displaying real-time job advertisements fetched from an external API. This feature provides immediate value and encourages user registration for full application tracking capabilities.
+
+**Integration Details:**
+- **External API:** [ArbeitNow Job Board API](https://www.arbeitnow.com/api/job-board-api)
+- **Implementation:** Develop a service to consume the external JSON data and transform it into a standardized internal DTO.
+- **Data Mapping:** The backend exposes a public endpoint (`/api/public/jobs`) returning a list of job objects with the following fields:
+  - `company_name`: Name of the hiring organization.
+  - `title`: Job position title.
+  - `url`: Direct link to the job posting.
+  - `remote`: Boolean indicating if the position is remote.
+  - `job_types`: List of employment types (e.g., Full-time, Internship).
+  - `tags`: List of relevant keywords or technologies.
+  - `location`: Geographic location of the job.
 
 # 3. Installation and running the app
 # 3.1. Java & Maven installations
