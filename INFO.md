@@ -143,6 +143,7 @@ Primary Key: (application_id, document_id)
 
 # 2. Steps of creation backend (For Developer)
 ## 2.1. Create empty project with essential dependencies:
+Initialize a Spring Boot project using Spring Initializr or your IDE. Include the following dependencies to support web development, database interaction, security, validation, and API documentation:
 - `spring-boot-starter-web`: For building web, including RESTful, applications using Spring MVC.
 - `spring-boot-starter-data-jpa`: For using Spring Data JPA with Hibernate.
 - `spring-boot-starter-validation`: For using Java Bean Validation with Hibernate Validator.
@@ -220,8 +221,17 @@ All in country Luxembourg. Other data define randomly.
 1. Take documents from /config/seed_documents, apply to the test user.
 #### applications table
 Create different applications for the test user, and with different documents attached and statuses.
-## 2.5. Create DTOs
+## 2.5. Create DTOs (Data Transfer Objects)
+Create separate classes to handle data transfer between client and server, ensuring that internal entity structures (like `User` passwords) are not exposed directly. Implement `Request` DTOs for input validation and `Response` DTOs for structured output.
+
 ## 2.6. Create controllers, services, repositories
+Implement the 3-layer architecture:
+- **Repository Layer:** Interfaces extending `JpaRepository` for DB access.
+- **Service Layer:** Classes containing business logic (e.g., `UserService`, `ApplicationService`), handling validations and transactions.
+- **Controller Layer:** REST Controllers (`@RestController`) defining API endpoints, handling HTTP requests, and mapping DTOs. Use `Mappers` to convert between Entities and DTOs.
+
+## 2.7. Add JWT and security
+Configure `WebSecurityConfig` to secure endpoints. Implement `JwtService` to generate and validate tokens. Create `JwtAuthenticationFilter` to intercept requests and set the `UserPrincipal` in the security context. Enable CORS and Swagger UI access.
 
 # 3. Installation and running the app
 # 3.1. Java & Maven installations
