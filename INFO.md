@@ -220,7 +220,8 @@ All in country Luxembourg. Other data define randomly.
 1. Take documents from /config/seed_documents, apply to the test user.
 #### applications table
 Create different applications for the test user, and with different documents attached and statuses.
-
+## 2.5. Create DTOs
+## 2.6. Create controllers, services, repositories
 
 # 3. Installation and running the app
 # 3.1. Java & Maven installations

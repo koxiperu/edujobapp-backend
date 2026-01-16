@@ -16,6 +16,7 @@ public class ApplicationResponse {
     private LocalDate responseDeadline;
     private String appStatus; // Will map to EApplicationStatus enum name
     private String resultNotes;// Nested DTO
+    private Long userId;
     private CompanyResponse company; // Nested DTO
     private Set<DocumentResponse> documents; // Nested DTO
 
@@ -98,6 +99,14 @@ public class ApplicationResponse {
 
     public void setResultNotes(String resultNotes) {
         this.resultNotes = resultNotes;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public CompanyResponse getCompany() {

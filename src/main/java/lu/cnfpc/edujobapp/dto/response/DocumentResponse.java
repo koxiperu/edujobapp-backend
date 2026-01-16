@@ -10,6 +10,7 @@ public class DocumentResponse {
     private LocalDateTime uploadDate;
     private String docStatus; // Will map to EDocumentStatus enum name
     private Long userId; // To avoid circular dependency with UserResponse
+    private String downloadUrl;
 
     // Getters and Setters
     public Long getId() {
@@ -58,5 +59,13 @@ public class DocumentResponse {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public String getDownloadUrl() {
+        return downloadUrl;
+    }
+
+    public void setDownloadUrl(String downloadUrl) {
+        this.downloadUrl = downloadUrl;
     }
 }
