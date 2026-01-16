@@ -9,8 +9,6 @@ import lu.cnfpc.edujobapp.mapper.UserMapper;
 import lu.cnfpc.edujobapp.repository.UserRepository;
 import lu.cnfpc.edujobapp.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -68,11 +66,6 @@ public class UserService {
         }
 
         return userMapper.toUserResponse(userRepository.save(user));
-    }
-
-    public void deleteCurrentUser() {
-        User user = getCurrentUser();
-        userRepository.delete(user);
     }
 
     // ADMIN Methods

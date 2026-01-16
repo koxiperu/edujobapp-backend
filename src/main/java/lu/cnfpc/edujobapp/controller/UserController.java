@@ -33,13 +33,6 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUserProfile(request));
     }
 
-    @Operation(summary = "Delete current user account")
-    @DeleteMapping("/me")
-    public ResponseEntity<Void> deleteCurrentUser() {
-        userService.deleteCurrentUser();
-        return ResponseEntity.noContent().build();
-    }
-
     @Operation(summary = "Get all users (Admin only)")
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")

@@ -21,7 +21,6 @@ Build full-stack application EduJob Application Tracker.
    * /me
         GET - Get the current user's profile.
         PUT -  Update the current user's profile.
-        DELETE - Delete the current user's account.
    * /
         GET - (ADMIN) Get a list of all users.
    * /{id}
