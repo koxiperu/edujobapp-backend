@@ -17,11 +17,14 @@ Build full-stack application EduJob Application Tracker.
    * /register: POST - Register a new user. 
    * /login: POST - Authenticate and receive a token (JWT).
 
+**/api/public - for unauthenticated users**
+   * /jobs
+        GET - Get job advertisements from an external third-party API.
+
 **/api/users**
    * /me
         GET - Get the current user's profile.
         PUT -  Update the current user's profile.
-        DELETE - Delete the current user's account.
    * /
         GET - (ADMIN) Get a list of all users.
    * /{id}
@@ -69,7 +72,7 @@ Build full-stack application EduJob Application Tracker.
 #### Role Entity (roles)
 Defines user permissions for authorization. ADMIN and APPLICANT for now, SUPERVISOR for the future.
 - id (PK)	(Unique role ID)
-- name	(Role name (ENUM: ADMIN, USER))
+- name	(Role name (String: ADMIN, USER))
 ADMIN can only manage all users (create, update, delete, view user's info) and companies (only view all companies without used_id who created it and only update existing company info). He cannot have access to other db information (documents, apps, create/delete companies of the user)
 
 #### User Entity (users)
@@ -98,13 +101,13 @@ Represents a university, lycée, course provider, or employer.
 - user_id (NotNull, FK → users,	Owner of the company)
 
 #### Document Entity (documents)
-Represents uploaded files (PDFs, images, Excel, etc.) stored as BYTEA inside DB (max 5MB each file and not more than 1000, otherwise performance issues). But for production external storage is better.
+Represents uploaded files (PDFs, images, Excel, etc.) stored as binary content inside DB (max 5MB each file and not more than 1000, otherwise performance issues). But for production external storage is better.
 One document may be reused across multiple applications.
 - id (PK)	(NotNull, Unique, referenced by applications)
 - file_name	(NotNull, File name that user want to be displayed)
 - content_type	(pdf, picture, document, excel, etc. or brief description)
 - upload_date	(File upload timestamp, defined at the moment of saving in db as current timestamp)
-- data	(BYTEA content)
+- data	(Binary content - byte array)
 - doc_status	(NotNull, ENUM: READY / IN PROGRESS / NEED TO UPDATE)
 - user_id (NotNull, FK → users,	Owner of the documents)
 
@@ -119,10 +122,9 @@ Represents a job or study application submitted by a user.
 - submit_date	(Date of submission)
 - submit_deadline	(Application deadline)
 - response_deadline	(Expected response date)
-- app_status	(NotNull, PLANNED / SUBMITTED / ACCEPTED / REJECTED / etc.)
+- app_status	(NotNull, ENUM: DRAFT / SUBMITTED / UNDER_REVIEW / ACCEPTED / REJECTED)
 - description	(Detailed description of the job offer or course program)
-- response_status	(NotNull, by default WAITING. Final outcome of the application from the company: WAITING/ACCEPTED/REJECTED).
-- result_notes	(Optional notes about the result or feedback)
+- response_notes	(Optional notes about the result or feedback)
 
 #### Join table (Many-to-Many): Application-Document (app-doc)
 Implements Many-to-Many between applications and documents.
@@ -144,6 +146,7 @@ Primary Key: (application_id, document_id)
 
 # 2. Steps of creation backend (For Developer)
 ## 2.1. Create empty project with essential dependencies:
+Initialize a Spring Boot project using Spring Initializr or your IDE. Include the following dependencies to support web development, database interaction, security, validation, and API documentation:
 - `spring-boot-starter-web`: For building web, including RESTful, applications using Spring MVC.
 - `spring-boot-starter-data-jpa`: For using Spring Data JPA with Hibernate.
 - `spring-boot-starter-validation`: For using Java Bean Validation with Hibernate Validator.
@@ -205,7 +208,7 @@ Create Repositories classes.
 - phone: 123456789
 - role: user
 #### companies table:
-Default companies for existing users (test1 and test2):
+Default companies for existing user (test):
 - "CFL - Société Nationale des Chemins de Fer Luxembourgeois",
 - "Dussmann Luxembourg",
 - "POST Luxembourg",
@@ -218,10 +221,35 @@ Default companies for existing users (test1 and test2):
 - "Cargolux Airlines International SA"
 All in country Luxembourg. Other data define randomly.
 #### documents table
-1. Take documents from /config/seed_documents, apply to test1 and test2 users.
+1. Take documents from /config/seed_documents, apply to the test user.
 #### applications table
-Create different applications for test1 and test2 users, and with different documents attached and statuses.
+Create different applications for the test user, and with different documents attached and statuses.
+## 2.5. Create DTOs (Data Transfer Objects)
+Create separate classes to handle data transfer between client and server, ensuring that internal entity structures (like `User` passwords) are not exposed directly. Implement `Request` DTOs for input validation and `Response` DTOs for structured output.
 
+## 2.6. Create controllers, services, repositories
+Implement the 3-layer architecture:
+- **Repository Layer:** Interfaces extending `JpaRepository` for DB access.
+- **Service Layer:** Classes containing business logic (e.g., `UserService`, `ApplicationService`), handling validations and transactions.
+- **Controller Layer:** REST Controllers (`@RestController`) defining API endpoints, handling HTTP requests, and mapping DTOs. Use `Mappers` to convert between Entities and DTOs.
+
+## 2.7. Add JWT and security
+Configure `WebSecurityConfig` to secure endpoints. Implement `JwtService` to generate and validate tokens. Create `JwtAuthenticationFilter` to intercept requests and set the `UserPrincipal` in the security context. Enable CORS and Swagger UI access.
+
+## 2.8. Integrate Third-Party Job API
+Enhance the landing page for unauthenticated users by displaying real-time job advertisements fetched from an external API. This feature provides immediate value and encourages user registration for full application tracking capabilities.
+
+**Integration Details:**
+- **External API:** [ArbeitNow Job Board API](https://www.arbeitnow.com/api/job-board-api)
+- **Implementation:** Develop a service to consume the external JSON data and transform it into a standardized internal DTO.
+- **Data Mapping:** The backend exposes a public endpoint (`/api/public/jobs`) returning a list of job objects with the following fields:
+  - `company_name`: Name of the hiring organization.
+  - `title`: Job position title.
+  - `url`: Direct link to the job posting.
+  - `remote`: Boolean indicating if the position is remote.
+  - `job_types`: List of employment types (e.g., Full-time, Internship).
+  - `tags`: List of relevant keywords or technologies.
+  - `location`: Geographic location of the job.
 
 # 3. Installation and running the app
 # 3.1. Java & Maven installations
@@ -317,5 +345,3 @@ To run the application, you need to have a PostgreSQL database server installed 
    password=password
    ```
    Adjust these values if your PostgreSQL setup uses different credentials.
-
-
