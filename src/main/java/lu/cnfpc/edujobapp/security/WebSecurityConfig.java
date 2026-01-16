@@ -47,18 +47,17 @@ public class WebSecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/public/**").permitAll()
                 
-                // Admin only endpoints (fallback if not covered by PreAuthorize)
-                .requestMatchers("/api/users").hasRole("ADMIN") 
-                // .requestMatchers("/api/users/**").hasRole("ADMIN") // Cannot use this blindly because of /me
-
-                // User only endpoints
+                // USER (Applicant) specific endpoints
+                .requestMatchers("/api/users/me").hasRole("USER")
                 .requestMatchers("/api/applications/**").hasRole("USER")
                 .requestMatchers("/api/documents/**").hasRole("USER")
                 .requestMatchers("/api/dashboard/**").hasRole("USER")
+                .requestMatchers("/api/companies/**").hasRole("USER")
                 
-                // Shared/Specific logic
-                .requestMatchers("/api/users/me").authenticated()
-                .requestMatchers("/api/companies/**").authenticated() // Logic in controller/service
+                // ADMIN only endpoints (managing users)
+                // Order matters: /me is handled above, so /** here only hits admin tasks
+                .requestMatchers("/api/users/**").hasRole("ADMIN")
+                .requestMatchers("/api/users").hasRole("ADMIN")
                 
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 // Everything else - require auth
