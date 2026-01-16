@@ -1,7 +1,6 @@
 package lu.cnfpc.edujobapp.entity;
 
 import jakarta.persistence.*;
-import lu.cnfpc.edujobapp.entity.enums.ERole;
 
 @Entity
 @Table(name = "roles")
@@ -10,12 +9,11 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Enumerated(EnumType.STRING)
     @Column(length = 20, unique = true, nullable = false)
-    private ERole name;
+    private String name;
 
     // Constriuctors
-    public Role(ERole name) {
+    public Role(String name) {
         this.name = name;
     }
     public Role() {
@@ -27,10 +25,10 @@ public class Role {
     public void setId(Integer id) {
         this.id = id;
     }
-    public ERole getName() {
+    public String getName() {
         return name;
     }
-    public void setName(ERole name) {
+    public void setName(String name) {
         this.name = name;
     }
     

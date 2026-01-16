@@ -65,7 +65,7 @@ public class Application {
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE })
     @JoinTable(name = "app_doc", joinColumns = @JoinColumn(name = "application_id"), inverseJoinColumns = @JoinColumn(name = "document_id"))
     private Set<Document> documents = new HashSet<>();
 

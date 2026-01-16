@@ -26,7 +26,6 @@ public class Document {
     private LocalDateTime uploadDate;
 
     @Lob
-    @Column(columnDefinition = "BYTEA")
     private byte[] data;
 
     @NotNull

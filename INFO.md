@@ -182,7 +182,7 @@ and folder structure:
 ## 2.2. Configure application.properties (for Oracle or Postgres)
 ## 2.3. Create Entities
 ## 2.4. Create seeds for DB initialization
-
+Create Repositories classes.
 #### roles table
 1. USER
 2. ADMIN
@@ -195,21 +195,12 @@ and folder structure:
 - last_name: admin_surname
 - birthdate: 1.1.2000
 - role: admin 
-2. Test user1:
-- username: test1
-- password: test1
-- email: user1@ab.com
-- first_name: user1_name
-- last_name: user1_surname
-- birthdate: 2.1.2000
-- phone: 123456789
-- role: user
-3. Test user2:
-- username: test2
-- password: test2
-- email: user2@ab.com
-- first_name: user2_name
-- last_name: user2_surname
+2. Test user:
+- username: test
+- password: test
+- email: test@ab.com
+- first_name: test_name
+- last_name: test_surname
 - birthdate: 2.1.2000
 - phone: 123456789
 - role: user
