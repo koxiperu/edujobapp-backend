@@ -41,16 +41,16 @@ Build full-stack application EduJob Application Tracker.
         PUT - Update an application.
         DELETE - Delete an application.
 
-**/api/institutions - for the logged-in user**
+**/api/companies - for the logged-in user**
    * /
-        GET - Get all institutions for the logged-in user.
-        POST - Create a new institution.
+        GET - Get all companies for the logged-in user.
+        POST - Create a new company.
    * /{id}
-        GET - Get a single institution by ID.
-        PUT - Update an institution.
-        DELETE - Delete an institution.
+        GET - Get a single company by ID.
+        PUT - Update a company.
+        DELETE - Delete a company.
    * /{id}/applications
-        GET - Get all applications for a specific institution.
+        GET - Get all applications for a specific company.
 
 **/api/documents - for the logged-in user**
    * /
@@ -73,7 +73,7 @@ Build full-stack application EduJob Application Tracker.
 Defines user permissions for authorization. ADMIN and APPLICANT for now, SUPERVISOR for the future.
 - id (PK)	(Unique role ID)
 - name	(Role name (String: ADMIN, USER))
-ADMIN can only manage all users (create, update, delete, view user's info) and companies (only view all companies without used_id who created it and only update existing company info). He cannot have access to other db information (documents, apps, create/delete companies of the user)
+ADMIN role is designed for managing other users (only update, delete, view user's info). ADMIN cannot self-register or manage their own profile data beyond basic updates allowed for all users; their primary function is system administration. ADMIN does not have access to personal user data like documents, applications or user's list of companies.
 
 #### User Entity (users)
 Represents any system user. 

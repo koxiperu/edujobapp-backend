@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
     info = @Info(
         title = "EduJob Application Tracker API",
         version = "1.0",
-        description = "REST API for tracking job and study applications, managing documents and institutions.",
+        description = "REST API for tracking job and study applications, managing documents and companies.",
         contact = @Contact(
             name = "API Support",
             email = "support@edujobapp.lu"
