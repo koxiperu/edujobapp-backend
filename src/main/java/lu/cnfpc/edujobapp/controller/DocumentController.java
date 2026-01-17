@@ -39,8 +39,12 @@ public class DocumentController {
 
     @Operation(summary = "Upload a new document")
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<DocumentResponse> uploadDocument(@RequestParam("file") MultipartFile file) throws IOException {
-        return ResponseEntity.ok(documentService.uploadDocument(file));
+    public ResponseEntity<DocumentResponse> uploadDocument(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam(value = "fileName", required = false) String fileName,
+            @RequestParam(value = "docStatus", required = false) String docStatus
+    ) throws IOException {
+        return ResponseEntity.ok(documentService.uploadDocument(file, fileName, docStatus));
     }
 
     @Operation(summary = "Get metadata for a single document")

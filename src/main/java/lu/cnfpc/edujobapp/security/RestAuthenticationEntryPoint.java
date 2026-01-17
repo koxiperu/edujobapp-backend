@@ -13,6 +13,12 @@ import java.io.IOException;
 @Component
 public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
+    private final ObjectMapper mapper;
+
+    public RestAuthenticationEntryPoint() {
+        this.mapper = new ObjectMapper();
+    }
+
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
         response.setContentType("application/json");
@@ -20,11 +26,10 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpServletResponse.SC_UNAUTHORIZED,
-                "Unauthorized: " + authException.getMessage(),
+                "Unauthorized: Full authentication is required to access this resource",
                 request.getRequestURI()
         );
 
-        ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(response.getOutputStream(), errorResponse);
     }
 }

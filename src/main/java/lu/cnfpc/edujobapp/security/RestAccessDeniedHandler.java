@@ -14,6 +14,12 @@ import java.io.IOException;
 @Component
 public class RestAccessDeniedHandler implements AccessDeniedHandler {
 
+    private final ObjectMapper mapper;
+
+    public RestAccessDeniedHandler() {
+        this.mapper = new ObjectMapper();
+    }
+
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         response.setContentType("application/json");
@@ -25,7 +31,6 @@ public class RestAccessDeniedHandler implements AccessDeniedHandler {
                 request.getRequestURI()
         );
 
-        ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(response.getOutputStream(), errorResponse);
     }
 }

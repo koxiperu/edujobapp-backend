@@ -10,6 +10,7 @@ import lu.cnfpc.edujobapp.repository.DocumentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class DocumentService {
 
     @Autowired
@@ -35,14 +37,32 @@ public class DocumentService {
                 .collect(Collectors.toList());
     }
 
-    public DocumentResponse uploadDocument(MultipartFile file) throws IOException {
+    public DocumentResponse uploadDocument(MultipartFile file, String fileName, String docStatus) throws IOException {
         User user = userService.getCurrentUser();
         
         Document document = new Document();
-        document.setFileName(file.getOriginalFilename());
+        
+        // Use provided fileName or fallback to original
+        if (fileName != null && !fileName.isEmpty()) {
+            document.setFileName(fileName);
+        } else {
+            document.setFileName(file.getOriginalFilename());
+        }
+        
         document.setContentType(file.getContentType());
         document.setData(file.getBytes());
-        document.setDocStatus(EDocumentStatus.READY); // Default status
+        
+        // Use provided status or fallback to READY
+        if (docStatus != null && !docStatus.isEmpty()) {
+             try {
+                document.setDocStatus(EDocumentStatus.valueOf(docStatus));
+            } catch (IllegalArgumentException e) {
+                throw new RuntimeException("Invalid document status: " + docStatus);
+            }
+        } else {
+            document.setDocStatus(EDocumentStatus.READY); // Default status
+        }
+        
         document.setUser(user);
         
         return documentMapper.toDocumentResponse(documentRepository.save(document));
