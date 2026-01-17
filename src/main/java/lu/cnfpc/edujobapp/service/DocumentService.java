@@ -37,7 +37,7 @@ public class DocumentService {
                 .collect(Collectors.toList());
     }
 
-    public DocumentResponse uploadDocument(MultipartFile file, String fileName, String docStatus) throws IOException {
+    public DocumentResponse uploadDocument(MultipartFile file, String fileName, String contentType, String docStatus) throws IOException {
         User user = userService.getCurrentUser();
         
         Document document = new Document();
@@ -49,7 +49,13 @@ public class DocumentService {
             document.setFileName(file.getOriginalFilename());
         }
         
-        document.setContentType(file.getContentType());
+        // Use provided contentType or fallback to file's contentType
+        if (contentType != null && !contentType.isEmpty()) {
+            document.setContentType(contentType);
+        } else {
+            document.setContentType(file.getContentType());
+        }
+
         document.setData(file.getBytes());
         
         // Use provided status or fallback to READY

@@ -42,9 +42,10 @@ public class DocumentController {
     public ResponseEntity<DocumentResponse> uploadDocument(
             @RequestParam("file") MultipartFile file,
             @RequestParam(value = "fileName", required = false) String fileName,
+            @RequestParam(value = "contentType", required = false) String contentType,
             @RequestParam(value = "docStatus", required = false) String docStatus
     ) throws IOException {
-        return ResponseEntity.ok(documentService.uploadDocument(file, fileName, docStatus));
+        return ResponseEntity.ok(documentService.uploadDocument(file, fileName, contentType, docStatus));
     }
 
     @Operation(summary = "Get metadata for a single document")
