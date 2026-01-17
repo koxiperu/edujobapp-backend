@@ -67,6 +67,13 @@ Build full-stack application EduJob Application Tracker.
         GET - Get all applications using a specific document.
 
 **/api/dashboard - of logged-in user**
+   GET - Get dashboard statistics and data for the logged-in user.
+   Response includes:
+   1.  Total count of documents and list of document file names.
+   2.  Total count of companies and list of company names.
+   3.  Total count of applications and list of all applications (full details) for frontend filtering.
+   4.  Applications breakdown by status and type.
+   Frontend will use this data to display critical applications (deadline < 1 week).
 
 ### Database (PostgreSQL):
 #### Role Entity (roles)

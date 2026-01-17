@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CompanyRepository extends JpaRepository<Company, Long> {
     List<Company> findByUserId(Long userId);
+    long countByUserId(Long userId);
 }
