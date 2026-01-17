@@ -1,6 +1,7 @@
 package lu.cnfpc.edujobapp.service;
 
 import lu.cnfpc.edujobapp.dto.request.RegisterUserRequestDto;
+import lu.cnfpc.edujobapp.dto.request.UpdateUserRequestDto;
 import lu.cnfpc.edujobapp.dto.response.UserResponse;
 import lu.cnfpc.edujobapp.entity.User;
 import lu.cnfpc.edujobapp.exception.EmailAlreadyExistsException;
@@ -11,11 +12,13 @@ import lu.cnfpc.edujobapp.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class UserService {
 
     @Autowired
@@ -41,7 +44,7 @@ public class UserService {
         return userMapper.toUserResponse(getCurrentUser());
     }
 
-    public UserResponse updateUserProfile(RegisterUserRequestDto request) {
+    public UserResponse updateUserProfile(UpdateUserRequestDto request) {
         User user = getCurrentUser();
 
         // If username changes, check availability
@@ -60,11 +63,6 @@ public class UserService {
         user.setBirthDate(request.getBirthDate());
         user.setPhone(request.getPhone());
         
-        // Only update password if provided and not empty
-        if (request.getPassword() != null && !request.getPassword().isEmpty()) {
-            user.setPassword(passwordEncoder.encode(request.getPassword()));
-        }
-
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
@@ -82,8 +80,8 @@ public class UserService {
         return userMapper.toUserResponse(user);
     }
     
-    // Admin update user (reusing request DTO for simplicity, though a dedicated AdminUpdateUserDto is often better)
-    public UserResponse updateUser(Long id, RegisterUserRequestDto request) {
+    // Admin update user
+    public UserResponse updateUser(Long id, UpdateUserRequestDto request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
 
@@ -101,11 +99,6 @@ public class UserService {
         user.setLastName(request.getLastName());
         user.setBirthDate(request.getBirthDate());
         user.setPhone(request.getPhone());
-        
-        // Admin resetting password if provided
-        if (request.getPassword() != null && !request.getPassword().isEmpty()) {
-            user.setPassword(passwordEncoder.encode(request.getPassword()));
-        }
         
         return userMapper.toUserResponse(userRepository.save(user));
     }

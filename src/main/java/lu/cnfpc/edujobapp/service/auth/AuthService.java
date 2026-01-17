@@ -4,18 +4,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lu.cnfpc.edujobapp.dto.request.LoginUserRequestDto;
 import lu.cnfpc.edujobapp.dto.request.RegisterUserRequestDto;
 import lu.cnfpc.edujobapp.dto.response.AuthUserResponseDto;
 import lu.cnfpc.edujobapp.entity.Role;
 import lu.cnfpc.edujobapp.entity.User;
+import lu.cnfpc.edujobapp.entity.enums.ERole;
 import lu.cnfpc.edujobapp.exception.EmailAlreadyExistsException;
 import lu.cnfpc.edujobapp.exception.UsernameAlreadyExistsException;
 import lu.cnfpc.edujobapp.repository.RoleRepository;
 import lu.cnfpc.edujobapp.repository.UserRepository;
 
 @Service
+@Transactional
 public class AuthService {
     
     @Autowired
@@ -41,9 +44,9 @@ public class AuthService {
             throw new EmailAlreadyExistsException(dto.getEmail());
         }
         
-        // Find role
-        Role role = roleRepository.findByName(dto.getRole())
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+        // Find default USER role
+        Role role = roleRepository.findByName(ERole.USER.name())
+                .orElseThrow(() -> new RuntimeException("Error: Default Role is not found."));
         
         // Create new user
         User user = new User();

@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/institutions")
-@Tag(name = "Institution", description = "Institution/Company management APIs")
+@RequestMapping("/api/companies")
+@Tag(name = "Company", description = "Company management APIs")
 public class CompanyController {
 
     @Autowired
@@ -25,38 +25,38 @@ public class CompanyController {
     @Autowired
     private ApplicationService applicationService;
 
-    @Operation(summary = "Get all institutions for the logged-in user")
+    @Operation(summary = "Get all companies for the logged-in user")
     @GetMapping
     public ResponseEntity<List<CompanyResponse>> getMyCompanies() {
         return ResponseEntity.ok(companyService.getMyCompanies());
     }
 
-    @Operation(summary = "Create a new institution")
+    @Operation(summary = "Create a new company")
     @PostMapping
     public ResponseEntity<CompanyResponse> createCompany(@Valid @RequestBody CompanyRequest request) {
         return ResponseEntity.ok(companyService.createCompany(request));
     }
 
-    @Operation(summary = "Get a single institution by ID")
+    @Operation(summary = "Get a single company by ID")
     @GetMapping("/{id}")
     public ResponseEntity<CompanyResponse> getCompanyById(@PathVariable Long id) {
         return ResponseEntity.ok(companyService.getCompanyById(id));
     }
 
-    @Operation(summary = "Update an institution")
+    @Operation(summary = "Update a company")
     @PutMapping("/{id}")
     public ResponseEntity<CompanyResponse> updateCompany(@PathVariable Long id, @Valid @RequestBody CompanyRequest request) {
         return ResponseEntity.ok(companyService.updateCompany(id, request));
     }
 
-    @Operation(summary = "Delete an institution")
+    @Operation(summary = "Delete a company")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCompany(@PathVariable Long id) {
         companyService.deleteCompany(id);
         return ResponseEntity.noContent().build();
     }
     
-    @Operation(summary = "Get all applications for a specific institution")
+    @Operation(summary = "Get all applications for a specific company")
     @GetMapping("/{id}/applications")
     public ResponseEntity<List<ApplicationResponse>> getApplicationsByCompany(@PathVariable Long id) {
         // Access control check handled in Service or implicit by data ownership check

@@ -3,15 +3,11 @@ package lu.cnfpc.edujobapp.dto.request;
 import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 
-public class RegisterUserRequestDto {
+public class UpdateUserRequestDto {
 
     @NotBlank(message = "Username is required")
     @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
     private String username;
-
-    @NotBlank(message = "Password is required")
-    @Size(min = 8, max = 120, message = "Password must be between 8 and 120 characters")
-    private String password;
 
     @NotBlank(message = "Email is required")
     @Email(message = "Email should be valid")
@@ -31,34 +27,24 @@ public class RegisterUserRequestDto {
     @Size(max = 20, message = "Phone must be less than 20 characters")
     private String phone;
 
-    //constructors
-    public RegisterUserRequestDto() {
+    public UpdateUserRequestDto() {
     }
-    public RegisterUserRequestDto(String username, String password, String email, String firstName, String lastName, LocalDate birthDate, String phone) {
+
+    public UpdateUserRequestDto(String username, String email, String firstName, String lastName, LocalDate birthDate, String phone) {
         this.username = username;
-        this.password = password;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthDate = birthDate;
         this.phone = phone;
-    }   
+    }
 
-    // Getters and Setters
     public String getUsername() {
         return username;
     }
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getEmail() {

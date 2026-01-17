@@ -15,6 +15,7 @@ import lu.cnfpc.edujobapp.repository.DocumentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ApplicationService {
 
     @Autowired
@@ -52,9 +54,9 @@ public class ApplicationService {
             throw new RuntimeException("Company not found with id: " + companyId);
         }
         // Check permissions (User should own the company or be Admin? Or user owns applications?)
-        // Requirement says: "Get all applications for a specific institution." 
+        // Requirement says: "Get all applications for a specific company." 
         // Logic: Return applications linked to this company.
-        // Assuming this is called by CompanyController for "Institutions for logged-in user".
+        // Assuming this is called by CompanyController for "Companies for logged-in user".
         // So the user should own the company.
         
         return applicationRepository.findByCompanyId(companyId).stream()

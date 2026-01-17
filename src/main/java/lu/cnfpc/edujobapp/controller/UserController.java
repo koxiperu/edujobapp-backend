@@ -3,7 +3,7 @@ package lu.cnfpc.edujobapp.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lu.cnfpc.edujobapp.dto.request.RegisterUserRequestDto;
+import lu.cnfpc.edujobapp.dto.request.UpdateUserRequestDto;
 import lu.cnfpc.edujobapp.dto.response.UserResponse;
 import lu.cnfpc.edujobapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class UserController {
 
     @Operation(summary = "Update current user profile")
     @PutMapping("/me")
-    public ResponseEntity<UserResponse> updateCurrentUser(@Valid @RequestBody RegisterUserRequestDto request) {
+    public ResponseEntity<UserResponse> updateCurrentUser(@Valid @RequestBody UpdateUserRequestDto request) {
         return ResponseEntity.ok(userService.updateUserProfile(request));
     }
 
@@ -50,7 +50,7 @@ public class UserController {
     @Operation(summary = "Update user by ID (Admin only)")
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @Valid @RequestBody RegisterUserRequestDto request) {
+    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserRequestDto request) {
         return ResponseEntity.ok(userService.updateUser(id, request));
     }
 
