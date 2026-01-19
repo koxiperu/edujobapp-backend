@@ -259,7 +259,7 @@ Enhance the landing page for unauthenticated users by displaying real-time job a
   - `location`: Geographic location of the job.
 
 # 3. Installation and running the app
-# 3.1. Java & Maven installations
+## 3.1. Java & Maven installations
 #### Install Java 21
 Windows:
 - Download JDK 21 (LTS) from:
@@ -311,7 +311,7 @@ Linux (Ubuntu):
 sudo apt install -y maven
 mvn -version
 ```
-# 3.2. DB setup
+## 3.2. DB setup
 To run the application, you need to have a PostgreSQL database server installed and running.
 
 #### Install PostgreSQL and pgAdmin (Optional)
@@ -352,3 +352,18 @@ To run the application, you need to have a PostgreSQL database server installed 
    password=password
    ```
    Adjust these values if your PostgreSQL setup uses different credentials.
+
+# 4. Roadmap & Future Features
+
+## 4.1. New Role: Supervisor
+- **Goal:** Allow supervisors to track and assist subordinates.
+- **Features:**
+    - **View Subordinates:** Access dashboard and stats of assigned users.
+    - **Feedback:** Ability to comment on subordinates' applications or dashboard.
+    - **Recommendations:** Create and assign lists of Jobs/Courses for subordinates.
+    - **Subordinate View:** Users should see these recommended items on their own dashboard.
+
+## 4.2. Admin Enhancements
+- **Company Management:** Full CRUD access to manage all companies in the system.
+- **User Security:** Functionality to change/reset user passwords.
+- **Supervisor Management:** Assign users to supervisors.
