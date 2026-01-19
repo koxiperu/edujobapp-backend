@@ -11,7 +11,7 @@ Build full-stack application EduJob Application Tracker.
 ## 1.3. Core Requirements
 
 ### Backend (Spring Boot):
-- Build RESTful API endpoints for user authentification and authorisation, user's applications/documenta/companies management, users management for ADMIN.
+- Build RESTful API endpoints for user authentification and authorisation, user's applications/documenta/companies management, users management for ADMIN. (Frontend Fully Integrated)
 #### API structure
 **/api/auth** 
    * /register: POST - Register a new user. 
