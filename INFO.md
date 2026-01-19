@@ -367,3 +367,6 @@ To run the application, you need to have a PostgreSQL database server installed 
 - **Company Management:** Full CRUD access to manage all companies in the system.
 - **User Security:** Functionality to change/reset user passwords.
 - **Supervisor Management:** Assign users to supervisors.
+
+## 4.3. Notification service
+Sending emails about upcoming deadlines.
