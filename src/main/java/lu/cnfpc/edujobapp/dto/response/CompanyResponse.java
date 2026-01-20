@@ -11,6 +11,7 @@ public class CompanyResponse {
     private String phone;
     private String email;
     private Long userId; // To avoid circular dependency with UserResponse
+    private int applicationCount;
 
     // Getters and Setters
     public Long getId() {
@@ -83,5 +84,13 @@ public class CompanyResponse {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public int getApplicationCount() {
+        return applicationCount;
+    }
+
+    public void setApplicationCount(int applicationCount) {
+        this.applicationCount = applicationCount;
     }
 }
