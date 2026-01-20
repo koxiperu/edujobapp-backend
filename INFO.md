@@ -370,3 +370,15 @@ To run the application, you need to have a PostgreSQL database server installed 
 
 ## 4.3. Notification service
 Sending emails about upcoming deadlines.
+
+# 5. API Documentation
+
+The full API documentation, including endpoints, request/response schemas, and interactive testing, is available via the Swagger UI once the application is running.
+
+**URL:** `http://localhost:8080/docs`
+**OpenAPI Spec:** `http://localhost:8080/api-docs`
+
+To generate a PDF or static document:
+1. Start the application.
+2. Navigate to the OpenAPI Spec URL to download the `openapi.json` file.
+3. Use an external tool (like Swagger Editor, SwaggerHub, or a CLI converter) to import the JSON and export it as PDF or HTML.

@@ -101,6 +101,10 @@ public class CompanyService {
         if (!company.getUser().getId().equals(currentUser.getId()) && !currentUser.getRole().getName().equals("ADMIN")) {
              throw new AccessDeniedException("You do not have permission to delete this company.");
         }
+
+        if (!company.getApplications().isEmpty()) {
+            throw new lu.cnfpc.edujobapp.exception.ResourceInUseException("Cannot delete company because it is associated with existing applications.");
+        }
         
         companyRepository.delete(company);
     }
