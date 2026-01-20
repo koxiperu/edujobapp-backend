@@ -9,25 +9,19 @@ public class DashboardResponse {
     private long totalCompanies;
     private Map<String, Long> applicationsByStatus;
     private Map<String, Long> applicationsByType;
-    
-    // New fields for frontend filtering
-    private List<String> documentNames;
-    private List<String> companyNames;
-    private List<ApplicationResponse> allApplications;
+    private List<ApplicationDashboardResponse> allApplications;
 
     public DashboardResponse() {
     }
 
     public DashboardResponse(long totalApplications, long totalDocuments, long totalCompanies, 
                              Map<String, Long> applicationsByStatus, Map<String, Long> applicationsByType,
-                             List<String> documentNames, List<String> companyNames, List<ApplicationResponse> allApplications) {
+                             List<ApplicationDashboardResponse> allApplications) {
         this.totalApplications = totalApplications;
         this.totalDocuments = totalDocuments;
         this.totalCompanies = totalCompanies;
         this.applicationsByStatus = applicationsByStatus;
         this.applicationsByType = applicationsByType;
-        this.documentNames = documentNames;
-        this.companyNames = companyNames;
         this.allApplications = allApplications;
     }
 
@@ -71,27 +65,11 @@ public class DashboardResponse {
         this.applicationsByType = applicationsByType;
     }
 
-    public List<String> getDocumentNames() {
-        return documentNames;
-    }
-
-    public void setDocumentNames(List<String> documentNames) {
-        this.documentNames = documentNames;
-    }
-
-    public List<String> getCompanyNames() {
-        return companyNames;
-    }
-
-    public void setCompanyNames(List<String> companyNames) {
-        this.companyNames = companyNames;
-    }
-
-    public List<ApplicationResponse> getAllApplications() {
+    public List<ApplicationDashboardResponse> getAllApplications() {
         return allApplications;
     }
 
-    public void setAllApplications(List<ApplicationResponse> allApplications) {
+    public void setAllApplications(List<ApplicationDashboardResponse> allApplications) {
         this.allApplications = allApplications;
     }
 }
