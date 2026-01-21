@@ -151,19 +151,19 @@ Primary Key: (application_id, document_id)
 - Include form validation.
 - Follow UX design best practices.
 
-# 2. Steps of creation backend (For Developer)
-## 2.1. Create empty project with essential dependencies:
-Initialize a Spring Boot project using Spring Initializr or your IDE. Include the following dependencies to support web development, database interaction, security, validation, and API documentation:
-- `spring-boot-starter-web`: For building web, including RESTful, applications using Spring MVC.
-- `spring-boot-starter-data-jpa`: For using Spring Data JPA with Hibernate.
-- `spring-boot-starter-validation`: For using Java Bean Validation with Hibernate Validator.
-- `spring-boot-starter-security`: For using Spring Security.
-- `postgresql`: PostgreSQL JDBC driver for database connectivity.
-- `jjwt` (api, impl, jackson): For creating and verifying JWT (JSON Web Token) for stateless authentication.
-- `springdoc-openapi-starter-webmvc-ui`: For generating interactive API documentation with Swagger UI.
-- `spring-boot-starter-test`: For testing Spring Boot applications.
+# 2. Architecture & Implementation Details (For Developer)
+## 2.1. Project Initialization & Dependencies
+The project is built with **Spring Boot 4.0.1** and **Java 21**. Essential dependencies used:
+- `spring-boot-starter-webmvc`: Core RESTful API support.
+- `spring-boot-starter-data-jpa`: Persistent storage with Hibernate.
+- `spring-boot-starter-validation`: Bean validation for DTOs.
+- `spring-boot-starter-security`: RBAC and secure endpoint configuration.
+- `postgresql`: Database driver.
+- `jjwt` (api, impl, jackson 0.12.3): Stateless JWT authentication.
+- `springdoc-openapi-starter-webmvc-ui` (2.7.0): Swagger UI documentation.
+- `spring-boot-starter-test`: Unit and integration testing.
 
-and folder structure:
+Folder structure follows standard Spring Boot conventions:
 ```
 /src
 ├───main
@@ -171,214 +171,97 @@ and folder structure:
 │   │   └───lu
 │   │       └───cnfpc
 │   │           └───edujobapp
-│   │               ├───config
-│   │               ├───controller
-│   │               ├───dto
-│   │               │   ├───error
-│   │               │   ├───request
-│   │               │   └───response
-│   │               ├───entity
-│   │               │   └───enums
-│   │               ├───exception
-│   │               ├───mapper
-│   │               ├───repository
-│   │               ├───security
-│   │               └───service
-│   │                   └───auth
-│   └───resources
-└───test
-    └───java
+│   │               ├───config         # App configs, DatabaseSeeder, OpenAPI
+│   │               ├───controller     # API Endpoints
+│   │               ├───dto            # Request/Response/Error DTOs
+│   │               ├───entity         # JPA Entities and Enums
+│   │               ├───exception      # Custom exceptions and GlobalExceptionHandler
+│   │               ├───mapper         # Entity-DTO mapping logic
+│   │               ├───repository     # Spring Data JPA interfaces
+│   │               ├───security       # JWT filters, UserPrincipal, SecurityConfig
+│   │               └───service        # Business logic and Auth service
+│   └───resources                      # application.properties
+└───test                               # JUnit 5 and Mockito tests
 ```
-## 2.2. Configure application.properties (for Oracle or Postgres)
-## 2.3. Create Entities
-## 2.4. Create seeds for DB initialization
-Create Repositories classes.
-#### roles table
-1. USER
-2. ADMIN
-#### users table
-1. Admin user:
-- username: admin
-- password: admin
-- email: admin@ab.com
-- first_name: admin_name
-- last_name: admin_surname
-- birthdate: 1.1.2000
-- role: admin 
-2. Test user:
-- username: test
-- password: test
-- email: test@ab.com
-- first_name: test_name
-- last_name: test_surname
-- birthdate: 2.1.2000
-- phone: 123456789
-- role: user
-#### companies table:
-Default companies for existing user (test):
-- "CFL - Société Nationale des Chemins de Fer Luxembourgeois",
-- "Dussmann Luxembourg",
-- "POST Luxembourg",
-- "Amazon",
-- "Cactus",
-- "BNP PARIBAS Luxembourg",
-- "PwC Luxembourg",
-- "ArcelorMittal",
-- "Goodyear",
-- "Cargolux Airlines International SA"
-All in country Luxembourg. Other data define randomly.
-#### documents table
-1. Take documents from /config/seed_documents, apply to the test user.
-#### applications table
-Create different applications for the test user, and with different documents attached and statuses.
-## 2.5. Create DTOs (Data Transfer Objects)
-Create separate classes to handle data transfer between client and server, ensuring that internal entity structures (like `User` passwords) are not exposed directly. Implement `Request` DTOs for input validation and `Response` DTOs for structured output.
 
-## 2.6. Create controllers, services, repositories
-Implement the 3-layer architecture:
-- **Repository Layer:** Interfaces extending `JpaRepository` for DB access.
-- **Service Layer:** Classes containing business logic (e.g., `UserService`, `ApplicationService`), handling validations and transactions.
-- **Controller Layer:** REST Controllers (`@RestController`) defining API endpoints, handling HTTP requests, and mapping DTOs. Use `Mappers` to convert between Entities and DTOs.
+## 2.2. Configuration (application.properties)
+Configured for PostgreSQL. Supports environment variable overrides:
+- `DATABASE_URL`: `jdbc:postgresql://localhost:5432/edujobapp`
+- `DATABASE_USERNAME`: `postgres`
+- `DATABASE_PASSWORD`: `password`
+- `JWT_SECRET`: HS256 secret key.
+- `JWT_EXPIRATION`: 86400000 ms (24 hours).
 
-## 2.7. Add JWT and security
-Configure `WebSecurityConfig` to secure endpoints. Implement `JwtService` to generate and validate tokens. Create `JwtAuthenticationFilter` to intercept requests and set the `UserPrincipal` in the security context. Enable CORS and Swagger UI access.
+## 2.3. Domain Entities & Enums
+Specific Enums used to ensure data integrity:
+- `EApplicationStatus`: `DRAFT`, `SUBMITTED`, `UNDER_REVIEW`, `ACCEPTED`, `REJECTED`.
+- `EApplicationType`: `JOB`, `UNIVERSITY`, `LYCEE`, `COURSE`.
+- `ECompanyType`: `UNIVERSITY`, `EMPLOYER`, `LYCEE`, `COURSE`.
+- `EDocumentStatus`: `READY`, `IN_PROGRESS`, `NEED_TO_UPDATE`.
+- `ERole`: `ROLE_USER`, `ROLE_ADMIN`.
 
-## 2.8. Integrate Third-Party Job API
-Enhance the landing page for unauthenticated users by displaying real-time job advertisements fetched from an external API. This feature provides immediate value and encourages user registration for full application tracking capabilities.
+## 2.4. Database Seeding & Testing
+The `DatabaseSeeder` runs on startup, initializing:
+- **Roles:** `USER`, `ADMIN`.
+- **Users:**
+    1. **Admin:** `admin` / `admin` (Role: `ADMIN`, manages users).
+    2. **Test User:** `test` / `test` (Role: `USER`, owns documents/applications).
+- **Companies:** 10 pre-defined Luxembourg companies (POST, Amazon, ArcelorMittal, etc.).
+- **Documents:** Sample files loaded from `config/seed_documents/` (CVs, letters).
+- **Applications:** 8 varied applications for the 'test' user to populate the dashboard.
 
-**Integration Details:**
+## 2.5. Security & Authentication
+Implemented via a stateless JWT filter chain:
+- `JwtAuthenticationFilter`: Intercepts every request, validates the token, and sets the `SecurityContext`.
+- `UserPrincipal`: Implements `UserDetails` to store authenticated user info.
+- `RestAuthenticationEntryPoint`: Returns 401 Unauthorized for failed auth.
+- `RestAccessDeniedHandler`: Returns 403 Forbidden for insufficient permissions.
+
+## 2.6. Global Exception Handling
+A `@ControllerAdvice` maps custom and standard exceptions to a structured `ErrorResponse`:
+- `UsernameAlreadyExistsException` / `EmailAlreadyExistsException`: 409 Conflict.
+- `ResourceInUseException`: 409 Conflict (e.g., deleting a company with apps).
+- `BadCredentialsException`: 401 Unauthorized.
+- `MethodArgumentNotValidException`: 400 Bad Request (DTO validation errors).
+
+## 2.7. Dashboard Business Logic
+`DashboardService` calculates real-time statistics for the current user using Java Streams:
+- `applicationsByStatus`: `Map<String, Long>` (Grouping by status).
+- `applicationsByType`: `Map<String, Long>` (Grouping by type).
+- Total counts for applications, documents, and companies.
+
+## 2.8. Third-Party Job API Integration
+Fetches real-time job listings for the public landing page.
 - **External API:** [ArbeitNow Job Board API](https://www.arbeitnow.com/api/job-board-api)
-- **Implementation:** Develop a service to consume the external JSON data and transform it into a standardized internal DTO.
-- **Data Mapping:** The backend exposes a public endpoint (`/api/public/jobs`) returning a list of job objects with the following fields:
-  - `company_name`: Name of the hiring organization.
-  - `title`: Job position title.
-  - `url`: Direct link to the job posting.
-  - `remote`: Boolean indicating if the position is remote.
-  - `job_types`: List of employment types (e.g., Full-time, Internship).
-  - `tags`: List of relevant keywords or technologies.
-  - `location`: Geographic location of the job.
+- **Mapping:** `PublicJobService` transforms external JSON into `PublicJobResponse`.
 
 # 3. Installation and running the app
 ## 3.1. Java & Maven installations
 #### Install Java 21
-Windows:
-- Download JDK 21 (LTS) from:
-https://adoptium.net/
-- Choose:
-Version: 21
-Package: JDK
-OS: Windows
-- Install and check “Set JAVA_HOME”
-- Verify:
-```
-java -version
-```
+Ensure JDK 21 is installed and `JAVA_HOME` is correctly set.
+Verify: `java -version`
 
-macOS (Homebrew):
-```
-brew install openjdk@21
-echo 'export JAVA_H$(/usr/libexec/java_home -v21)' >> ~/.zshrc
-source ~/.zshrc
-java -version
-```
+#### Maven
+The project uses the **Maven Wrapper (`mvnw`)**. You do not need a global Maven installation.
+Verify: `./mvnw -version`
 
-Linux (Ubuntu):
-```
-sudo apt update
-sudo apt install -y openjdk-21-jdk
-java -version
-```
-
-#### Install Maven
-Windows:
-- Download Maven:
-https://maven.apache.org/download.cgi
-- Extract to: C:\Program Files\Apache\Maven
-- Add to PATH: C:\Program Files\Apache\Maven\bin
-- Verify:
-```
-mvn -version
-```
-
-macOS (Homebrew):
-```
-brew install maven
-mvn -version
-```
-
-Linux (Ubuntu):
-```
-sudo apt install -y maven
-mvn -version
-```
 ## 3.2. DB setup
-To run the application, you need to have a PostgreSQL database server installed and running.
-
-#### Install PostgreSQL and pgAdmin (Optional)
-   *   **PostgreSQL:** Follow the official PostgreSQL installation guide for your operating system.
-       [https://www.postgresql.org/download/](https://www.postgresql.org/download/)
-   *   **pgAdmin (Optional):** pgAdmin is a popular graphical administration tool for PostgreSQL.
-       [https://www.pgadmin.org/download/](https://www.pgadmin.org/download/)
-
-#### Create the 'edujobapp' Database
-   Once PostgreSQL is installed, create a new database named `edujobapp`. You can do this using either the command line or pgAdmin.
-
-   **Using Command Line (recommended for quick setup):**
-   Open your terminal or command prompt and run the following command (you might need to switch to the `postgres` user or use `sudo -u postgres`):
-   ```bash
-   createdb edujobapp
-   ```
-   If `createdb` is not in your PATH, you might need to specify the full path, e.g., `/usr/local/bin/createdb edujobapp`.
-
-   Alternatively, you can use the `psql` interactive terminal:
-   ```bash
-   psql -U postgres
-   # Enter your PostgreSQL password if prompted
-   CREATE DATABASE edujobapp;
-   \q
-   ```
-
-   **Using pgAdmin:**
-   1.  Open pgAdmin and connect to your PostgreSQL server.
-   2.  Right-click on "Databases" in the browser tree.
-   3.  Select "Create" -> "Database...".
-   4.  In the "Create - Database" dialog, enter `edujobapp` in the "Database name" field.
-   5.  Click "Save".
-
-#### Database Credentials
-   Ensure you have the correct PostgreSQL username and password. By default, the app uses:
-   ```properties
-   username=postgres
-   password=password
-   ```
-   Adjust these values if your PostgreSQL setup uses different credentials.
+1.  **Install PostgreSQL.**
+2.  **Create the Database:**
+    ```bash
+    createdb edujobapp
+    ```
+3.  **Default Credentials:**
+    - **Username:** `postgres`
+    - **Password:** `password`
+    Adjust in `application.properties` or set environment variables if needed.
 
 # 4. Roadmap & Future Features
-
-## 4.1. New Role: Supervisor
-- **Goal:** Allow supervisors to track and assist subordinates.
-- **Features:**
-    - **View Subordinates:** Access dashboard and stats of assigned users.
-    - **Feedback:** Ability to comment on subordinates' applications or dashboard.
-    - **Recommendations:** Create and assign lists of Jobs/Courses for subordinates.
-    - **Subordinate View:** Users should see these recommended items on their own dashboard.
-
-## 4.2. Admin Enhancements
-- **Company Management:** Full CRUD access to manage all companies in the system.
-- **User Security:** Functionality to change/reset user passwords.
-- **Supervisor Management:** Assign users to supervisors.
-
-## 4.3. Notification service
-Sending emails about upcoming deadlines.
+- **New Role: Supervisor:** View and assist subordinates' progress.
+- **Notification Service:** Email alerts for upcoming deadlines.
+- **Admin Tools:** Password reset and supervisor-user assignment.
 
 # 5. API Documentation
-
-The full API documentation, including endpoints, request/response schemas, and interactive testing, is available via the Swagger UI once the application is running.
-
-**URL:** `http://localhost:8080/docs`
-**OpenAPI Spec:** `http://localhost:8080/api-docs`
-
-To generate a PDF or static document:
-1. Start the application.
-2. Navigate to the OpenAPI Spec URL to download the `openapi.json` file.
-3. Use an external tool (like Swagger Editor, SwaggerHub, or a CLI converter) to import the JSON and export it as PDF or HTML.
+Swagger UI is fully integrated for interactive testing.
+- **URL:** `http://localhost:8080/docs`
+- **OpenAPI Spec:** `http://localhost:8080/api-docs`
