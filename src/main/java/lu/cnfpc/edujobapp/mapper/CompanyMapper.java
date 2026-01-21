@@ -23,6 +23,9 @@ public class CompanyMapper {
         if (company.getUser() != null) {
             response.setUserId(company.getUser().getId());
         }
+        if (company.getApplications() != null) {
+            response.setApplicationCount(company.getApplications().size());
+        }
         return response;
     }
 }

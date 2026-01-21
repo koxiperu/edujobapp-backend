@@ -31,6 +31,10 @@ public class DocumentMapper {
                 .path("/download")
                 .toUriString();
         response.setDownloadUrl(downloadUrl);
+
+        if (document.getApplications() != null) {
+            response.setApplicationCount(document.getApplications().size());
+        }
         
         return response;
     }
