@@ -29,9 +29,7 @@ public class Application {
     @Enumerated(EnumType.STRING)
     private EApplicationType applicationType;
 
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime creationDate;
+    private LocalDateTime creationDate = LocalDateTime.now();
 
     private LocalDate submitDate;
 

@@ -11,6 +11,7 @@ public class DocumentResponse {
     private String docStatus; // Will map to EDocumentStatus enum name
     private Long userId; // To avoid circular dependency with UserResponse
     private String downloadUrl;
+    private int applicationCount;
 
     // Getters and Setters
     public Long getId() {
@@ -67,5 +68,13 @@ public class DocumentResponse {
 
     public void setDownloadUrl(String downloadUrl) {
         this.downloadUrl = downloadUrl;
+    }
+
+    public int getApplicationCount() {
+        return applicationCount;
+    }
+
+    public void setApplicationCount(int applicationCount) {
+        this.applicationCount = applicationCount;
     }
 }

@@ -43,7 +43,7 @@ public class Company {
     private User user;
 
     // One-to-Many relationship with Application
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "company")
     private Set<Application> applications = new HashSet<>(); // Changed to Set
 
     // Constructors

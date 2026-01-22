@@ -121,12 +121,20 @@ public class DatabaseSeeder implements CommandLineRunner {
                     Company company = new Company();
                     company.setName(name);
                     company.setType(ECompanyType.EMPLOYER);
-                    company.setCountry("Luxembourg");
+                    
+                    String country = "Luxembourg";
+                    if (i == 6 || i == 7) {
+                        country = "France";
+                    } else if (i == 8 || i == 9) {
+                        country = "Germany";
+                    }
+                    
+                    company.setCountry(country);
                     company.setUser(test);
                     
                     // Generate dummy data
                     String safeName = name.split(" ")[0].toLowerCase().replaceAll("[^a-z]", "");
-                    company.setAddress("Rue " + safeName + " " + (i + 1) + ", L-" + (1000 + i * 100) + " Luxembourg");
+                    company.setAddress("Rue " + safeName + " " + (i + 1) + ", " + country);
                     company.setEmail("contact@" + safeName + ".lu");
                     company.setPhone("+352 20 " + (100 + i) + " " + (100 + i));
                     company.setWebsite("https://www." + safeName + ".lu");
@@ -283,8 +291,136 @@ public class DatabaseSeeder implements CommandLineRunner {
                 app8.setCompany(companies.get(7)); // ArcelorMittal
                 app8.setDocuments(new HashSet<>(Collections.singletonList(documents.get(0))));
                 applicationRepository.save(app8);
+
+                // --- 20 New Applications ---
+                
+                LocalDate creationStart = LocalDate.of(2026, 1, 1);
+                LocalDate creationEnd = LocalDate.of(2026, 2, 24);
+                
+                LocalDate draftSubmitStart = LocalDate.of(2026, 1, 25);
+                LocalDate draftSubmitEnd = LocalDate.of(2026, 2, 5);
+                
+                LocalDate responseStart = LocalDate.of(2026, 1, 20);
+                LocalDate responseEnd = LocalDate.of(2026, 1, 27);
+
+                // --- 15 JOB TYPE APPLICATIONS ---
+
+                // Job 1 (Draft, No Docs)
+                createApp(test, companies.get(0), EApplicationType.JOB, "Railway Engineer", "Engineering role.", EApplicationStatus.DRAFT, 
+                        getRandomDateTime(creationStart, creationEnd), null, getRandomDate(draftSubmitStart, draftSubmitEnd), null, null, null);
+
+                // Job 2 (Draft, No Docs)
+                createApp(test, companies.get(1), EApplicationType.JOB, "Cleaning Supervisor", "Supervising teams.", EApplicationStatus.DRAFT, 
+                        getRandomDateTime(creationStart, creationEnd), null, getRandomDate(draftSubmitStart, draftSubmitEnd), null, null, null);
+
+                // Job 3 (Submitted, Docs)
+                createApp(test, companies.get(2), EApplicationType.JOB, "Network Technician", "Maintenance.", EApplicationStatus.SUBMITTED, 
+                        getRandomDateTime(creationStart, creationEnd), LocalDate.of(2026, 1, 15), null, getRandomDate(responseStart, responseEnd), null, new HashSet<>(Collections.singletonList(documents.get(1))));
+
+                // Job 4 (Submitted, Docs)
+                createApp(test, companies.get(3), EApplicationType.JOB, "Warehouse Associate", "Logistics.", EApplicationStatus.SUBMITTED, 
+                        getRandomDateTime(creationStart, creationEnd), LocalDate.of(2026, 1, 18), null, getRandomDate(responseStart, responseEnd), null, new HashSet<>(Collections.singletonList(documents.get(1))));
+
+                // Job 5 (Under Review, Docs)
+                createApp(test, companies.get(4), EApplicationType.JOB, "Baker", "Bakery department.", EApplicationStatus.UNDER_REVIEW, 
+                        getRandomDateTime(creationStart, creationEnd), LocalDate.of(2026, 1, 10), null, getRandomDate(responseStart, responseEnd), null, new HashSet<>(Collections.singletonList(documents.get(1))));
+
+                // Job 6 (Under Review, Docs)
+                createApp(test, companies.get(5), EApplicationType.JOB, "Bank Teller", "Customer service.", EApplicationStatus.UNDER_REVIEW, 
+                        getRandomDateTime(creationStart, creationEnd), LocalDate.of(2026, 1, 12), null, getRandomDate(responseStart, responseEnd), null, new HashSet<>(Arrays.asList(documents.get(1), documents.get(5))));
+
+                // Job 7 (Accepted, Docs)
+                createApp(test, companies.get(6), EApplicationType.JOB, "Junior Auditor", "Audit support.", EApplicationStatus.ACCEPTED, 
+                        getRandomDateTime(creationStart, creationEnd), LocalDate.of(2026, 1, 5), null, null, null, new HashSet<>(Collections.singletonList(documents.get(1))));
+
+                // Job 8 (Rejected, Docs)
+                createApp(test, companies.get(7), EApplicationType.JOB, "Safety Officer", "Site safety.", EApplicationStatus.REJECTED, 
+                        getRandomDateTime(creationStart, creationEnd), LocalDate.of(2026, 1, 8), null, null, "Not enough experience.", new HashSet<>(Collections.singletonList(documents.get(1))));
+
+                // Job 9 (Draft, Docs)
+                createApp(test, companies.get(8), EApplicationType.JOB, "Tire Builder", "Manufacturing.", EApplicationStatus.DRAFT, 
+                        getRandomDateTime(creationStart, creationEnd), null, getRandomDate(draftSubmitStart, draftSubmitEnd), null, null, new HashSet<>(Collections.singletonList(documents.get(1))));
+
+                // Job 10 (Draft, Docs)
+                createApp(test, companies.get(9), EApplicationType.JOB, "Pilot", "Flight operations.", EApplicationStatus.DRAFT, 
+                        getRandomDateTime(creationStart, creationEnd), null, getRandomDate(draftSubmitStart, draftSubmitEnd), null, null, new HashSet<>(Arrays.asList(documents.get(1), documents.get(5))));
+
+                // Job 11 (Submitted, Docs)
+                createApp(test, companies.get(0), EApplicationType.JOB, "Ticket Inspector", "Customer control.", EApplicationStatus.SUBMITTED, 
+                        getRandomDateTime(creationStart, creationEnd), LocalDate.of(2026, 1, 19), null, getRandomDate(responseStart, responseEnd), null, new HashSet<>(Collections.singletonList(documents.get(1))));
+
+                // Job 12 (Under Review, Docs)
+                createApp(test, companies.get(2), EApplicationType.JOB, "Mail Sorter", "Logistics center.", EApplicationStatus.UNDER_REVIEW, 
+                        getRandomDateTime(creationStart, creationEnd), LocalDate.of(2026, 1, 14), null, getRandomDate(responseStart, responseEnd), null, new HashSet<>(Collections.singletonList(documents.get(1))));
+
+                // Job 13 (Accepted, Docs)
+                createApp(test, companies.get(3), EApplicationType.JOB, "Delivery Driver", "Last mile delivery.", EApplicationStatus.ACCEPTED, 
+                        getRandomDateTime(creationStart, creationEnd), LocalDate.of(2026, 1, 6), null, null, null, new HashSet<>(Collections.singletonList(documents.get(1))));
+
+                // Job 14 (Rejected, Docs)
+                createApp(test, companies.get(4), EApplicationType.JOB, "Butcher", "Food prep.", EApplicationStatus.REJECTED, 
+                        getRandomDateTime(creationStart, creationEnd), LocalDate.of(2026, 1, 9), null, null, "Position closed.", new HashSet<>(Collections.singletonList(documents.get(1))));
+
+                // Job 15 (Draft, No Docs)
+                createApp(test, companies.get(5), EApplicationType.JOB, "IT Support", "Internal support.", EApplicationStatus.DRAFT, 
+                        getRandomDateTime(creationStart, creationEnd), null, getRandomDate(draftSubmitStart, draftSubmitEnd), null, null, null);
+
+
+                // --- 5 OTHER TYPE APPLICATIONS ---
+
+                // Other 1 (University, Draft, No Docs)
+                createApp(test, companies.get(1), EApplicationType.UNIVERSITY, "MBA Program", "Business Administration.", EApplicationStatus.DRAFT, 
+                        getRandomDateTime(creationStart, creationEnd), null, getRandomDate(draftSubmitStart, draftSubmitEnd), null, null, null);
+
+                // Other 2 (Course, Submitted, Docs)
+                createApp(test, companies.get(6), EApplicationType.COURSE, "Tax Compliance", "Advanced taxation.", EApplicationStatus.SUBMITTED, 
+                        getRandomDateTime(creationStart, creationEnd), LocalDate.of(2026, 1, 16), null, getRandomDate(responseStart, responseEnd), null, new HashSet<>(Collections.singletonList(documents.get(4))));
+
+                // Other 3 (Lycee, Under Review, Docs)
+                createApp(test, companies.get(7), EApplicationType.LYCEE, "Engineering Technician", "Vocational school.", EApplicationStatus.UNDER_REVIEW, 
+                        getRandomDateTime(creationStart, creationEnd), LocalDate.of(2026, 1, 13), null, getRandomDate(responseStart, responseEnd), null, new HashSet<>(Collections.singletonList(documents.get(2))));
+
+                // Other 4 (Course, Accepted, Docs)
+                createApp(test, companies.get(3), EApplicationType.COURSE, "Cloud Practitioner", "AWS certification.", EApplicationStatus.ACCEPTED, 
+                        getRandomDateTime(creationStart, creationEnd), LocalDate.of(2026, 1, 7), null, null, null, new HashSet<>(Collections.singletonList(documents.get(4))));
+
+                // Other 5 (University, Draft, No Docs)
+                createApp(test, companies.get(1), EApplicationType.UNIVERSITY, "Bachelor in Law", "Law degree.", EApplicationStatus.DRAFT, 
+                        getRandomDateTime(creationStart, creationEnd), null, getRandomDate(draftSubmitStart, draftSubmitEnd), null, null, null);
+
             }
         }
+    }
+
+    private void createApp(User user, Company company, EApplicationType type, String title, String desc, EApplicationStatus status, 
+                           java.time.LocalDateTime creationDate, LocalDate submitDate, LocalDate submitDeadline, LocalDate responseDeadline, String notes, java.util.Set<Document> docs) {
+        Application app = new Application();
+        app.setUser(user);
+        app.setCompany(company);
+        app.setApplicationType(type);
+        app.setTitle(title);
+        app.setDescription(desc);
+        app.setAppStatus(status);
+        app.setCreationDate(creationDate);
+        app.setSubmitDate(submitDate);
+        app.setSubmitDeadline(submitDeadline);
+        app.setResponseDeadline(responseDeadline);
+        app.setResponseNotes(notes);
+        if (docs != null) {
+            app.setDocuments(docs);
+        }
+        applicationRepository.save(app);
+    }
+
+    private LocalDate getRandomDate(LocalDate startInclusive, LocalDate endExclusive) {
+        long startEpochDay = startInclusive.toEpochDay();
+        long endEpochDay = endExclusive.toEpochDay();
+        long randomDay = java.util.concurrent.ThreadLocalRandom.current().nextLong(startEpochDay, endEpochDay);
+        return LocalDate.ofEpochDay(randomDay);
+    }
+
+    private java.time.LocalDateTime getRandomDateTime(LocalDate startInclusive, LocalDate endExclusive) {
+        return getRandomDate(startInclusive, endExclusive).atStartOfDay();
     }
 
     private String getContentType(String fileName) {

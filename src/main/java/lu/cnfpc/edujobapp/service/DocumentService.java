@@ -110,6 +110,11 @@ public class DocumentService {
 
     public void deleteDocument(Long id) {
         Document document = getDocumentEntity(id);
+
+        if (!document.getApplications().isEmpty()) {
+            throw new lu.cnfpc.edujobapp.exception.ResourceInUseException("Cannot delete document because it is associated with existing applications.");
+        }
+
         documentRepository.delete(document);
     }
 }
